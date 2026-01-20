@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Aim Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+            overflow: hidden;
+        }
 
+        #score, #time {
+            position: fixed;
+            top: 10px;
+            font-size: 20px;
+        }
+
+        #score { left: 20px; }
+        #time { right: 20px; }
+
+        #target {
+            width: 60px;
+            height: 60px;
+            background: red;
+            border-radius: 50%;
+            position: absolute;
+            cursor: crosshair;
+            display: none;
+        }
+
+        #startBtn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="score">Skor: 0</div>
+<div id="time">Süre: 30</div>
+<button id="startBtn">Oyunu Başlat</button>
+<div id="target"></div>
+
+<script>
+    const target = document.getElementById("target");
+    const scoreText = document.getElementById("score");
+    const timeText = document.getElementById("time");
+    const startBtn = document.getElementById("startBtn");
+
+    let score = 0;
+    let time = 30;
+    let gameInterval;
+    let timerInterval;
+
+    function randomPosition() {
+        const x = Math.random() * (window.innerWidth - 60);
+        const y = Math.random() * (window.innerHeight - 60);
+        target.style.left = x + "px";
+        target.style.top = y + "px";
+    }
+
+    function startGame() {
+        score = 0;
+        time = 30;
+        scoreText.textContent = "Skor: 0";
+        timeText.textContent = "Süre: 30";
+        startBtn.style.display = "none";
+        target.style.display = "block";
+
+        randomPosition();
+
+        gameInterval = setInterval(randomPosition, 800);
+
+        timerInterval = setInterval(() => {
+            time--;
+            timeText.textContent = "Süre: " + time;
+            if (time <= 0) endGame();
+        }, 1000);
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        clearInterval(timerInterval);
+        target.style.display = "none";
+        startBtn.style.display = "block";
+        startBtn.textContent = "Tekrar Oyna";
+        alert("Oyun Bitti! Skorun: " + score);
+    }
+
+    target.addEventListener("click", () => {
+        score++;
+        scoreText.textContent = "Skor: " + score;
+        randomPosition();
+    });
+
+    startBtn.addEventListener("click", startGame);
+</script>
+
+</body>
+</html>
